@@ -1,8 +1,4 @@
-var scroller = null;
-
-$(function() {
-    
-    scroller = {
+var scroller = {
         wrapper: null,
         scrollable: null,
         replacePhoto: function(target, photoLink)
@@ -112,22 +108,22 @@ $(function() {
 
         }
 
-    }
+};
+
+
+$(function() {
     
-});
+    $('body').waitForImages(function() {
 
+        call_scroll();
+        call_slider_sequence();    
+        call_tab();
+        call_lightbox();
+        call_lazy_load_images();
+        scroller.init();
 
-
-$(window).load(function(){
+    });
     
-  call_scroll();
-  call_slider_sequence();    
-  call_tab();
-  call_lightbox();
-  call_lazy_load_images();
-  
-  scroller.init();
-  
 });
 
 
