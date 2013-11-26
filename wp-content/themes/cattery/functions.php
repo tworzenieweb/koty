@@ -127,6 +127,11 @@ function tworzenieweb_scripts_styles() {
 	wp_enqueue_script( 'masonry', get_template_directory_uri() . '/js/masonry.pkgd.min.js', array(), '2013-09-31', true );
 	wp_enqueue_script( 'cattery-app', get_template_directory_uri() . '/js/app.js', array(), '2013-09-31', true );
 
+        
+        wp_enqueue_script( 'smoothscroll', get_template_directory_uri() . '/js/jquery.smoothdivscroll-1.3-min.js', array(), null, true );
+        wp_enqueue_script( 'kinetic', get_template_directory_uri() . '/js/jquery.kinetic.min.js', array(), null, true );
+	wp_enqueue_style( 'smoothscroll', get_template_directory_uri() . '/js/smooth-scroll/css/smoothDivScroll.css', array(), '1.00' );
+        
 	// Add Open Sans and Bitter fonts, used in the main stylesheet.
 	wp_enqueue_style( 'twentythirteen-fonts', '//fonts.googleapis.com/css?family=Libre+Baskerville:400,300,700|Berkshire+Swash', array(), null );
 
