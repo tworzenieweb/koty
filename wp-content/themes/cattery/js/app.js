@@ -156,15 +156,11 @@
 
     $(function() {
 
-        body.waitForImages(function() {
+        call_scroll();
+        call_slider_sequence();
+        call_lazy_load_images();
 
-            call_scroll();
-            call_slider_sequence();
-            call_lazy_load_images();
-
-            scroller.init();
-
-        });
+        scroller.init();
 
     });
 
