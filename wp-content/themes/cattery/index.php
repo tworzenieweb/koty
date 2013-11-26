@@ -8,7 +8,9 @@
           <div class="row-fluid">
             <div class="span12">
 
-                <h2>Aktualności</h2>
+		<?php dynamic_sidebar('homepage_start'); ?>
+
+                <h3>Aktualności</h3>
               
                 <div class="row-fluid">
                <?php /* Start the Loop */ ?>

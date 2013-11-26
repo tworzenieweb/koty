@@ -6,6 +6,15 @@ register_nav_menu( 'primary', 'Menu Główne' );
 
 function cattery_widgets_init() {
 
+        register_sidebar( array(
+		'name' => 'Strona Główna',
+		'id' => 'homepage_start',
+		'before_title' => '<h2>',
+		'after_title' => '</h2>',
+                'before_widget' => '<div class="row-fluid">',
+		'after_widget' => '</div>',
+	));
+    
 	register_sidebar( array(
 		'name' => 'Stopka 1',
 		'id' => 'footer_1',
