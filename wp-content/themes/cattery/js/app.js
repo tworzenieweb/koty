@@ -1,9 +1,11 @@
-var scroller = {
+(function($) {
+
+    var scroller = {
         wrapper: null,
         scrollable: null,
         replacePhoto: function(target, photoLink)
         {
-            
+
             target.empty();
 
             var img = new Image();
@@ -49,21 +51,21 @@ var scroller = {
                 self.replacePhoto(pic, href);
 
             });
-            
+
             pic.bind('click', function(e) {
-               
+
                 e.preventDefault();
-                
+
                 $(this).addClass('loading');
-                var src = $('img',$(this)).attr('src');
-                
+                var src = $('img', $(this)).attr('src');
+
                 var current = $('li:has(a[href="' + src + '"])', self.scrollable);
-                
+
                 var next = current.next();
-                
+
                 var link = null;
-                
-                if(next.length)
+
+                if (next.length)
                 {
                     link = $('a', next);
                 }
@@ -71,17 +73,17 @@ var scroller = {
                 {
                     link = $('li:first-child a', self.scrollable)
                 }
-                
+
                 self.replacePhoto($(this), link.attr('href'));
-                
-                
-                
+
+
+
             });
 
             var link = $('li:first-child a', this.scrollable).attr('href');
-            
+
             this.replacePhoto(pic, link);
-            
+
             this.scrollable.css('display', 'block');
 
 
@@ -108,113 +110,62 @@ var scroller = {
 
         }
 
-};
+    };
+
+    function call_lazy_load_images() {
+        $("#content img").unveil(300);
+    }
+
+    function call_slider_sequence() {
+        if ($('#sequence').length > 0) {
+            var options = {
+                autoPlay: true,
+                autoPlayDelay: 12000,
+                pauseOnHover: false,
+                hidePreloaderDelay: 1000,
+                nextButton: true,
+                prevButton: true,
+                pauseButton: true,
+                preloader: true,
+                hidePreloaderUsingCSS: false,
+                animateStartingFrameIn: true,
+                navigationSkipThreshold: 1700,
+                preventDelayWhenReversingAnimations: true,
+                customKeyEvents: {
+                    80: "pause"
+                }
+            };
 
 
-$(function() {
-    
-    $('body').waitForImages(function() {
+            var sequence = $("#sequence").sequence(options).data("sequence");
+        }
+    }
 
-        call_scroll();
-        call_slider_sequence();    
-        call_tab();
-        call_lightbox();
-        call_lazy_load_images();
-        scroller.init();
+
+
+    function call_scroll() {
+        /*Show back to top*/
+
+        $("#back_to_top").localScroll({
+            target: 'body'
+        });
+    }
+
+
+    var body = $('body'), _window = $(window);
+
+    $(function() {
+
+        body.waitForImages(function() {
+
+            call_scroll();
+            call_slider_sequence();
+            call_lazy_load_images();
+
+            scroller.init();
+
+        });
 
     });
-    
-});
 
-
-function call_lazy_load_images(){
-  //$("#content img").unveil(300)
-  $("#content img").unveil(300);
-}
-
-
-function call_tab(){
-  $('.lobster_tab a').click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-  })
-}
-
-function call_slider_sequence(){
-  if($('#sequence').length > 0){
-    var options = {
-      autoPlay: true,
-      autoPlayDelay: 12000,
-      pauseOnHover: false,
-      hidePreloaderDelay: 1000,
-      nextButton: true,
-      prevButton: true,
-      pauseButton: true,
-      preloader: true,
-      hidePreloaderUsingCSS: false,                   
-      animateStartingFrameIn: true,    
-      navigationSkipThreshold: 1700,
-      preventDelayWhenReversingAnimations: true,
-      customKeyEvents: {
-        80: "pause"
-      }
-    };
-    
-
-    var sequence = $("#sequence").sequence(options).data("sequence");
-  }
-}
-
-
-function call_grid(){
-  setTimeout(function() {
-    var selector = $('.gridmasonry');
-    if($(selector).length > 0){
-      $(selector).fadeIn();
-      var $container = $('.gridmasonry');
-      // trigger masonry
-      $container.masonry({
-        itemSelector: '.item_grid'
-      });
-      
-    }
-  }, 500);
-    
-}
-
-function call_scroll(){
-  /*Show back to top*/    
-  
-  $("#back_to_top").localScroll({
-    target:'body'   
-  });
-}
-
-function call_lightbox(){
-  if($('.image_link').length > 0){
-    $('.image_link').magnificPopup({
-      type:'image'
-    
-    });  
-  }
-  
-  if($('.galeries_footer').length > 0){
-    $('.galeries_footer').magnificPopup({
-      delegate: 'a',
-      type: 'image',
-      tLoading: 'Loading image...',
-      mainClass: 'mfp-img-mobile',
-      gallery: {
-        enabled: true,
-        navigateByImgClick: true,
-        preload: [0,1] // Will preload 0 - before current, and 1 after the current image
-      },
-      image: {
-        tError: 'The image could not be loaded.',
-        titleSrc: function(item) {
-          return item.el.attr('title') + '<small>by Your name</small>';
-        }
-      }
-    }); 
-  }
-}
+})(jQuery);
