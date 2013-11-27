@@ -1,116 +1,133 @@
 (function($) {
 
-    var scroller = {
-        wrapper: null,
-        scrollable: null,
-        replacePhoto: function(target, photoLink)
-        {
+    $.fn.myScroller = function() {
 
-            target.empty();
+        var scroller = {
+            wrapper: null,
+            scrollable: null,
+            replacePhoto: function(target, photoLink)
+            {
 
-            var img = new Image();
+                target.empty();
 
-            $(img)
-                    // once the image has loaded, execute this code
-                    .load(function() {
-                        // set the image hidden by default    
-                        $(this).hide();
+                var img = new Image();
 
-                        // with the holding div #loader, apply:
-                        target
-                                // remove the loading class (so no background spinner), 
-                                .removeClass('loading')
-                                // then insert our image
-                                .append(this);
+                $(img)
+                        // once the image has loaded, execute this code
+                        .load(function() {
+                            // set the image hidden by default    
+                            $(this).hide();
 
-                        // fade our image in to create a nice effect
-                        $(this).fadeIn();
-                    })
+                            // with the holding div #loader, apply:
+                            target
+                                    // remove the loading class (so no background spinner), 
+                                    .removeClass('loading')
+                                    // then insert our image
+                                    .append(this);
 
-                    // if there was an error loading the image, react accordingly
-                    .error(function() {
-                        // notify the user that the image could not be loaded
-                    })
+                            // fade our image in to create a nice effect
+                            $(this).fadeIn();
+                        })
 
-                    // *finally*, set the src attribute of the new image to our image
-                    .attr('src', photoLink);
+                        // if there was an error loading the image, react accordingly
+                        .error(function() {
+                            // notify the user that the image could not be loaded
+                        })
 
-        },
-        initPhotoClick: function()
-        {
-            var self = this;
-            var pic = $('.pic', this.wrapper);
+                        // *finally*, set the src attribute of the new image to our image
+                        .attr('src', photoLink);
 
-            this.scrollable.on('click', 'a', function(e) {
+            },
+            initPhotoClick: function()
+            {
+                var self = this;
+                var pic = $('.pic', this.wrapper);
 
-                e.preventDefault();
+                this.scrollable.on('click', 'a', function(e) {
 
-                pic.addClass('loading');
+                    e.preventDefault();
 
-                var href = $(this).attr('href');
-                self.replacePhoto(pic, href);
+                    pic.addClass('loading');
 
-            });
+                    var href = $(this).attr('href');
+                    self.replacePhoto(pic, href);
 
-            pic.bind('click', function(e) {
-
-                e.preventDefault();
-
-                $(this).addClass('loading');
-                var src = $('img', $(this)).attr('src');
-
-                var current = $('li:has(a[href="' + src + '"])', self.scrollable);
-
-                var next = current.next();
-
-                var link = null;
-
-                if (next.length)
-                {
-                    link = $('a', next);
-                }
-                else
-                {
-                    link = $('li:first-child a', self.scrollable)
-                }
-
-                self.replacePhoto($(this), link.attr('href'));
-
-
-
-            });
-
-            var link = $('li:first-child a', this.scrollable).attr('href');
-
-            this.replacePhoto(pic, link);
-
-            this.scrollable.css('display', 'block');
-
-
-        },
-        init: function()
-        {
-
-            this.wrapper = $('.ngg-galleryoverview');
-
-            if (this.wrapper.length) {
-
-                this.scrollable = $("#makeMeScrollable");
-
-                this.scrollable.smoothDivScroll({
-                    mousewheelScrolling: "allDirections",
-                    manualContinuousScrolling: true,
-                    autoScrollingMode: "onStart",
-                    autoScrollingInterval: 50,
-                    autoScrollingStarted: this.initPhotoClick()
                 });
+
+                pic.bind('click', function(e) {
+
+                    e.preventDefault();
+
+                    $(this).addClass('loading');
+                    var src = $('img', $(this)).attr('src');
+
+                    var current = $('li:has(a[href="' + src + '"])', self.scrollable);
+
+                    var next = current.next();
+
+                    var link = null;
+
+                    if (next.length)
+                    {
+                        link = $('a', next);
+                    }
+                    else
+                    {
+                        link = $('li:first-child a', self.scrollable)
+                    }
+
+                    self.replacePhoto($(this), link.attr('href'));
+
+
+
+                });
+
+                var link = $('li:first-child a', this.scrollable).attr('href');
+
+                this.replacePhoto(pic, link);
+
+                this.scrollable.css('display', 'block');
+
+
+            },
+            init: function(context)
+            {
+
+                this.wrapper = context;
+
+                if (this.wrapper.length) {
+
+                    this.scrollable = $('ul.makeMeScrollable',this.wrapper);
+
+                    this.scrollable.smoothDivScroll({
+                        mousewheelScrolling: "allDirections",
+                        manualContinuousScrolling: true,
+                        autoScrollingMode: "onStart",
+                        autoScrollingInterval: 50,
+                        autoScrollingStarted: this.initPhotoClick()
+                    });
+
+                }
+
 
             }
 
+        };
 
-        }
+        return this.each(
+            function() {
 
-    };
+                var scr = new scroller();
+
+                scroller.init($(this));
+
+            }
+
+        );
+
+    }
+
+
 
     function call_lazy_load_images() {
         $("#content img").unveil(300);
@@ -160,7 +177,6 @@
         call_slider_sequence();
         call_lazy_load_images();
 
-        scroller.init();
 
     });
 
